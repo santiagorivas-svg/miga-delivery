@@ -38,3 +38,29 @@ export class MinHeap {
       let smallest = index
       const left = 2 * index + 1
       const right = 2 * index + 2
+
+      if (
+        left < length &&
+        this.heap[left].priority < this.heap[smallest].priority
+      ) {
+        smallest = left
+      }
+      if (
+        right < length &&
+        this.heap[right].priority < this.heap[smallest].priority
+      ) {
+        smallest = right
+      }
+      if (smallest === index) break
+      ;[this.heap[index], this.heap[smallest]] = [
+        this.heap[smallest],
+        this.heap[index],
+      ]
+      index = smallest
+    }
+  }
+
+  getItems(): HeapItem[] {
+    return [...this.heap]
+  }
+}
