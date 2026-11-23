@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Search, MapPin, Plus, Minus, Trash2, Send, CheckCircle2, Clock, Bike, ShoppingBag, X, LogIn, Check, Heart, Package } from 'lucide-react';
 import { AuthProvider, useAuthContext } from './context/AuthContext';
@@ -57,7 +58,7 @@ function MainApp() {
   }, []);
 
   const [driversList, setDriversList] = useState<any[]>(() => driverHeap.getItems());
-  
+
   // Modal de Asignación Interactiva
   const [selectedDriverToAssign, setSelectedDriverToAssign] = useState<any | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
@@ -122,7 +123,7 @@ function MainApp() {
   // =========================================================================
   // TAREA DE ALEJANDRO: Búsqueda Optimizada usando Trie
   // =========================================================================
-  
+
   // 1. Inicialización del Trie con el catálogo de productos
   const trie = useMemo(() => {
     const t = new Trie();
@@ -130,22 +131,10 @@ function MainApp() {
     return t;
   }, []);
 
-  // TODO (Alejandro): Conectar la búsqueda del Trie con la interfaz
-  // Actualmente llama a trie.searchPrefix(), el cual debe retornar los productos filtrados.
-  // Si el query está vacío, debe retornar SAMPLE_PRODUCTS completos.
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return SAMPLE_PRODUCTS;
-
-    // TODO (Alejandro): Descomentar o ajustar la lógica cuando implementes Trie.ts
-    const results = trie.searchPrefix(searchQuery);
-    
-    // Fallback provisional si el Trie aún no retorna elementos:
-    return results.length > 0 
-      ? results 
-      : SAMPLE_PRODUCTS.filter((p) => 
-          p.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-  }, [searchQuery, trie]);
+  // 2. Búsqueda de productos utilizando Trie
+  const searchResults = searchQuery
+    ? trie.searchPrefix(searchQuery)
+    : SAMPLE_PRODUCTS;
 
   // 2. Grafo
   const routeGraph = useMemo(() => {

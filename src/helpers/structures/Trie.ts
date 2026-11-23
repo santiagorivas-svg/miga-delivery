@@ -1,3 +1,4 @@
+
 export class TrieNode {
   children: { [key: string]: TrieNode } = {};
   isEndOfWord: boolean = false;
@@ -7,16 +8,52 @@ export class TrieNode {
 export class Trie {
   root: TrieNode = new TrieNode();
 
-  // TODO (Alejandro): Insertar la palabra caracter por caracter en el Trie
-  insert(word: string, data: any): void {
-    // TODO: Implementar lógica de inserción
-    throw new Error("TODO (Alejandro): Método insert en Trie sin implementar");
+  // Insertar la palabra caracter por caracter en el Trie
+  insert(word: string, data: any = null): void {
+    let current = this.root;
+    const lowerWord = word.toLowerCase();
+
+    for (const char of lowerWord) {
+      if (!current.children[char]) {
+        current.children[char] = new TrieNode();
+      }
+
+      current = current.children[char];
+    }
+
+    current.isEndOfWord = true;
+    current.data = data;
   }
 
-  // TODO (Alejandro): Buscar todos los productos que inicien con el prefijo dado
+  // Buscar todos los productos que inicien con el prefijo dado
   searchPrefix(prefix: string): any[] {
-    // TODO: Implementar recorrido de nodos por prefijo
-    console.warn("TODO (Alejandro): Retornando arreglo vacío provisional");
-    return [];
+    let current = this.root;
+    const lowerPrefix = prefix.toLowerCase();
+
+    // Recorrer el Trie hasta encontrar el prefijo
+    for (const char of lowerPrefix) {
+      if (!current.children[char]) {
+        return [];
+      }
+
+      current = current.children[char];
+    }
+
+    // Recopilar los productos que coinciden con el prefijo
+    const results: any[] = [];
+
+    const collectWords = (node: TrieNode) => {
+      if (node.isEndOfWord && node.data !== null) {
+        results.push(node.data);
+      }
+
+      for (const char in node.children) {
+        collectWords(node.children[char]);
+      }
+    };
+
+    collectWords(current);
+
+    return results;
   }
 }
